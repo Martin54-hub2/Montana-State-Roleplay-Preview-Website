@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Montana State Roleplay</title>
+<meta name="theme-color" content="#10B981">
+<link rel="icon" type="image/png" href="montana-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#020E06;--surface:#061A0E;--card:#082014;--card-h:#0C2A1A;
+  --border:rgba(46,232,160,0.06);--border-h:rgba(46,232,160,0.2);
+  --green:#2EE8A0;--green-lt:#5EFFC0;--green-dim:rgba(46,232,160,0.08);
+  --green-glow:rgba(46,232,160,0.2);--emerald:#007040;--teal:#14B8A6;
+  --white:#f0fdf4;--gray:#4D7A5A;--gray-lt:#7DAA8B;--gray-dk:#0F2A18;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;line-height:1.6;cursor:none;}
+a,button{cursor:none;text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--gray-dk);border-radius:4px;}
+::selection{background:var(--green-dim);color:var(--green);}
+
+/* ── Bear Cursor ────────────────────────── */
+#bear{position:fixed;z-index:9999;pointer-events:none;font-size:28px;transition:transform 0.05s;filter:drop-shadow(0 0 8px rgba(46,232,160,0.3));transform:translate(-50%,-50%);}
+#cursor-glow{position:fixed;z-index:9998;pointer-events:none;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(46,232,160,0.04) 0%,transparent 70%);transform:translate(-50%,-50%);transition:all 0.3s ease;}
+
+/* ── Loader ──────────────────────────────── */
+#loader{position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.8s,visibility 0.8s;}
+#loader.done{opacity:0;visibility:hidden;}
+#loader img{width:100px;height:100px;object-fit:contain;animation:loaderPulse 1.5s ease-in-out infinite;filter:drop-shadow(0 0 30px var(--green-glow));}
+#loader-bar{width:160px;height:2px;background:var(--gray-dk);border-radius:2px;margin-top:28px;overflow:hidden;}
+#loader-fill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--teal));border-radius:2px;animation:loaderFill 2.4s ease forwards;}
+#loader-text{margin-top:14px;font-size:11px;color:var(--gray);letter-spacing:4px;text-transform:uppercase;}
+@keyframes loaderPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+@keyframes loaderFill{0%{width:0;}100%{width:100%;}}
+
+/* ── Nav ─────────────────────────────────── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:500;transition:all 0.5s cubic-bezier(.4,0,.2,1);border-bottom:1px solid transparent;}
+.nav.scrolled{background:rgba(4,13,7,0.95);backdrop-filter:blur(24px) saturate(1.4);border-bottom-color:var(--border);}
+.nav-inner{max-width:1240px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:76px;}
+.nav-logo{display:flex;align-items:center;gap:14px;}
+.nav-logo img{width:42px;height:42px;border-radius:12px;filter:drop-shadow(0 0 10px var(--green-glow));}
+.nav-logo-text{font-size:19px;font-weight:700;letter-spacing:-0.01em;}
+.nav-logo-text b{color:var(--green);}
+.nav-links{display:flex;gap:4px;align-items:center;}
+.nav-link{color:var(--gray-lt);padding:9px 18px;border-radius:8px;font-size:13.5px;font-weight:500;transition:all 0.25s;letter-spacing:0.3px;}
+.nav-link:hover,.nav-link.active{color:var(--green);background:var(--green-dim);}
+.nav-link.active{font-weight:600;}
+.nav-cta{padding:10px 24px;border-radius:10px;margin-left:12px;background:var(--green);color:#000;font-weight:700;font-size:13.5px;transition:all 0.25s;box-shadow:0 0 20px var(--green-glow);}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 28px var(--green-glow);}
+
+/* ── Hero with Parallax Forest ───────────── */
+.hero{position:relative;height:100vh;min-height:700px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.hero-sky{position:absolute;inset:0;background:linear-gradient(180deg,#061A0D 0%,#041208 40%,#020E06 100%);}
+
+/* Parallax tree layers */
+.tree-layer{position:absolute;bottom:0;left:0;right:0;pointer-events:none;will-change:transform;}
+.tree-layer svg{width:100%;display:block;}
+.tree-l1{z-index:4;}
+.tree-l2{z-index:3;opacity:0.7;}
+.tree-l3{z-index:2;opacity:0.4;}
+
+/* Fireflies */
+.firefly{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--green-lt);pointer-events:none;z-index:5;box-shadow:0 0 8px var(--green-lt),0 0 20px var(--green);animation:firefly-float var(--dur) ease-in-out infinite;opacity:0;}
+@keyframes firefly-float{0%,100%{transform:translate(0,0);opacity:0;}20%{opacity:0.8;}50%{transform:translate(var(--dx),var(--dy));opacity:1;}80%{opacity:0.6;}100%{transform:translate(calc(var(--dx)*-0.5),calc(var(--dy)*1.5));opacity:0;}}
+
+/* Waterfall shimmer line */
+.waterfall{position:absolute;left:50%;top:0;bottom:0;width:2px;z-index:1;overflow:hidden;transform:translateX(-50%);}
+.waterfall-drop{position:absolute;width:2px;height:40px;background:linear-gradient(180deg,transparent,rgba(46,232,160,0.15),transparent);border-radius:2px;animation:fall var(--d) linear infinite;top:-40px;left:0;}
+@keyframes fall{0%{top:-40px;opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{top:100%;opacity:0;}}
+
+.hero-content{position:relative;z-index:10;text-align:center;padding:0 24px;max-width:900px;}
+.hero-logo{width:160px;height:160px;object-fit:contain;margin:0 auto 28px;filter:drop-shadow(0 0 50px var(--green-glow));animation:hero-float 6s ease-in-out infinite;}
+@keyframes hero-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(40px,7vw,80px);font-weight:900;line-height:1.0;margin-bottom:20px;letter-spacing:-0.03em;}
+.hero h1 .gr{background:linear-gradient(135deg,var(--green-lt),var(--emerald),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{font-size:clamp(15px,2vw,19px);color:var(--gray-lt);max-width:520px;margin:0 auto 36px;line-height:1.7;font-weight:400;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{padding:15px 36px;border-radius:12px;background:var(--green);color:#000;font-weight:700;font-size:15px;transition:all 0.3s;box-shadow:0 0 40px var(--green-glow),0 8px 32px rgba(0,0,0,0.3);}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 0 50px var(--green-glow),0 12px 40px rgba(0,0,0,0.4);}
+.btn-s{padding:15px 36px;border-radius:12px;background:rgba(255,255,255,0.03);color:var(--white);font-weight:600;font-size:15px;border:1px solid var(--border);transition:all 0.3s;}
+.btn-s:hover{border-color:var(--border-h);background:var(--green-dim);}
+
+/* Scroll indicator */
+.scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:8px;animation:scrollBounce 2s ease infinite;}
+.scroll-hint-line{width:1px;height:32px;background:linear-gradient(180deg,var(--green),transparent);border-radius:1px;}
+.scroll-hint-text{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:3px;}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
+
+/* ── Stats Strip ─────────────────────────── */
+.stats-strip{padding:0 24px;margin-top:-40px;position:relative;z-index:20;max-width:1000px;margin-left:auto;margin-right:auto;}
+.stats-inner{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
+.stat{padding:32px 20px;text-align:center;border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat-val{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--green-lt),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:2.5px;margin-top:4px;}
+
+/* ── Section Base ────────────────────────── */
+.section{padding:120px 24px;max-width:1200px;margin:0 auto;}
+.s-label{font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:5px;text-align:center;margin-bottom:16px;}
+.s-title{font-family:'Playfair Display',serif;font-size:clamp(28px,4.5vw,52px);font-weight:800;text-align:center;margin-bottom:16px;letter-spacing:-0.02em;}
+.s-sub{font-size:15px;color:var(--gray-lt);text-align:center;max-width:480px;margin:0 auto 60px;}
+
+/* ── Department Cards ────────────────────── */
+.dept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.dept{border-radius:18px;overflow:hidden;background:var(--card);border:1px solid var(--border);transition:all 0.4s cubic-bezier(.4,0,.2,1);position:relative;}
+.dept:hover{border-color:var(--border-h);transform:translateY(-6px);box-shadow:0 24px 64px rgba(46,232,160,0.06);}
+.dept-img{width:100%;height:220px;object-fit:cover;transition:transform 0.6s;}.dept:hover .dept-img{transform:scale(1.04);}
+.dept-tag{position:absolute;top:14px;right:14px;padding:5px 14px;border-radius:50px;background:rgba(4,13,7,0.8);backdrop-filter:blur(12px);border:1px solid var(--border);font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1.5px;}
+.dept-body{padding:24px;}
+.dept-name{font-size:19px;font-weight:700;margin-bottom:8px;}
+.dept-desc{font-size:13.5px;color:var(--gray);line-height:1.65;}
+.dept-link{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;font-weight:600;color:var(--green);transition:gap 0.2s;}
+.dept:hover .dept-link{gap:10px;}
+
+/* ── Features ────────────────────────────── */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.feat{padding:28px 24px;border-radius:14px;background:var(--card);border:1px solid var(--border);transition:all 0.3s;}
+.feat:hover{border-color:var(--border-h);background:var(--card-h);transform:translateY(-2px);}
+.feat-icon{width:36px;height:36px;border-radius:10px;background:var(--green-dim);border:1px solid rgba(46,232,160,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+.feat-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green-glow);}
+.feat h3{font-size:15px;font-weight:700;margin-bottom:6px;}
+.feat p{font-size:12.5px;color:var(--gray);line-height:1.6;}
+
+/* ── Gallery Strip ───────────────────────── */
+.gallery-strip{padding:40px 0;overflow:hidden;}
+.gallery-scroll{display:flex;gap:14px;animation:scroll-x 30s linear infinite;width:max-content;}
+.gallery-scroll:hover{animation-play-state:paused;}
+.gallery-item{width:340px;height:200px;border-radius:14px;overflow:hidden;border:1px solid var(--border);flex-shrink:0;position:relative;transition:all 0.3s;}
+.gallery-item:hover{border-color:var(--border-h);}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}.gallery-item:hover img{transform:scale(1.06);}
+.gallery-item span{position:absolute;bottom:10px;left:10px;padding:4px 12px;border-radius:50px;background:rgba(4,13,7,0.85);backdrop-filter:blur(8px);font-size:11px;font-weight:600;color:var(--green);border:1px solid rgba(46,232,160,0.1);}
+@keyframes scroll-x{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ── CTA ─────────────────────────────────── */
+.cta{padding:60px 24px 120px;max-width:800px;margin:0 auto;text-align:center;}
+.cta-box{padding:64px 40px;border-radius:24px;background:var(--card);border:1px solid var(--border);position:relative;overflow:hidden;}
+.cta-orb{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,var(--green-glow) 0%,transparent 70%);filter:blur(60px);opacity:0.12;pointer-events:none;}
+.cta-box h2{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,38px);font-weight:800;margin-bottom:14px;position:relative;}
+.cta-box p{color:var(--gray-lt);margin-bottom:32px;position:relative;font-size:15px;}
+
+/* ── Footer ──────────────────────────────── */
+.footer{padding:32px 24px;max-width:1200px;margin:0 auto;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.footer-l{display:flex;align-items:center;gap:10px;}
+.footer-l img{width:28px;height:28px;border-radius:8px;}
+.footer-copy{font-size:12px;color:var(--gray);}
+.footer-r{display:flex;gap:20px;}
+.footer-r a{font-size:12px;color:var(--gray);transition:color 0.2s;}.footer-r a:hover{color:var(--green);}
+
+/* ── Reveal ──────────────────────────────── */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity 0.8s cubic-bezier(.4,0,.2,1),transform 0.8s cubic-bezier(.4,0,.2,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ── Responsive ──────────────────────────── */
+@media(max-width:900px){.dept-grid{grid-template-columns:1fr;}}
+@media(max-width:768px){.nav-links{display:none!important;}.stats-inner{grid-template-columns:repeat(2,1fr);}.stat{border-bottom:1px solid var(--border);}.hero h1{font-size:36px;}.hero-logo{width:110px;height:110px;}}
+@media(max-width:500px){body,*,a,button{cursor:auto!important;}#bear,#cursor-glow{display:none!important;}}
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader">
+  <img src="montana-logo.png" alt="MSRP">
+  <div id="loader-bar"><div id="loader-fill"></div></div>
+  <div id="loader-text">Loading</div>
+</div>
+
+<!-- Bear Cursor -->
+<div id="bear">🐻</div>
+<div id="cursor-glow"></div>
+
+<!-- Nav -->
+<nav class="nav" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><img src="montana-logo.png" alt="MSRP"><div class="nav-logo-text">Montana State <b>Roleplay</b></div></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="departments.html" class="nav-link">Departments</a>
+      <a href="gallery.html" class="nav-link">Gallery</a>
+      <a href="shop.html" class="nav-link">Shop</a>
+      <a href="join.html" class="nav-link">Join Us</a>
+      <a href="https://discord.gg/your-invite" target="_blank" class="nav-cta">Discord</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero with Forest Parallax -->
+<section class="hero" id="hero">
+  <div class="hero-sky"></div>
+
+  <!-- Waterfall shimmer lines -->
+  <div class="waterfall" style="left:25%;"><div class="waterfall-drop" style="--d:3s;animation-delay:0s;"></div><div class="waterfall-drop" style="--d:4s;animation-delay:1.5s;"></div></div>
+  <div class="waterfall" style="left:75%;"><div class="waterfall-drop" style="--d:3.5s;animation-delay:0.8s;"></div><div class="waterfall-drop" style="--d:4.5s;animation-delay:2s;"></div></div>
+
+  <!-- Tree layers (parallax) -->
+  <div class="tree-layer tree-l3" id="tl3">
+    <svg viewBox="0 0 1440 400" preserveAspectRatio="none"><path fill="#041208" d="M0 400V280c60-20 120 10 180-15s120-50 180-30 120 30 180 10 120-40 180-25 120 35 180 15 120-30 180-20 120 25 180 10V400z"/></svg>
+  </div>
+  <div class="tree-layer tree-l2" id="tl2">
+    <svg viewBox="0 0 1440 350" preserveAspectRatio="none"><path fill="#072014" d="M0 350V240c80-30 160 15 240-10s160-45 240-20 160 25 240 5 160-35 240-15 160 20 240-5V350z"/></svg>
+  </div>
+  <div class="tree-layer tree-l1" id="tl1">
+    <svg viewBox="0 0 1440 300" preserveAspectRatio="none"><path fill="#020E06" d="M0 300V200c100-25 200 20 300-5s200-40 300-15 200 30 300 10 200-20 240-10V300z"/></svg>
+  </div>
+
+  <!-- Fireflies (generated via JS) -->
+  <div id="fireflies"></div>
+
+  <div class="hero-content">
+    <img src="montana-logo.png" alt="Montana State Roleplay" class="hero-logo">
+    <h1>Montana State<br><span class="gr">Roleplay</span></h1>
+    <p class="hero-sub">A premium ERLC community built on serious roleplay, dedicated staff, and the wild beauty of Montana.</p>
+    <div class="hero-btns">
+      <a href="https://discord.gg/your-invite" target="_blank" class="btn-p">Join the Server ↗</a>
+      <a href="departments.html" class="btn-s">Departments</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-hint-line"></div>
+    <div class="scroll-hint-text">Scroll</div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-strip reveal">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-val">24/7</div><div class="stat-label">Active Staff</div></div>
+    <div class="stat"><div class="stat-val">50+</div><div class="stat-label">Members</div></div>
+    <div class="stat"><div class="stat-val">3</div><div class="stat-label">Departments</div></div>
+    <div class="stat"><div class="stat-val">Daily</div><div class="stat-label">Sessions</div></div>
+  </div>
+</div>
+
+<!-- Departments -->
+<section class="section">
+  <div class="reveal"><span class="s-label">Departments</span><h2 class="s-title">Choose Your Path</h2><p class="s-sub">Three divisions keeping Montana safe and thriving.</p></div>
+  <div class="dept-grid">
+    <div class="reveal dept">
+      <img src="montana-leo.png" class="dept-img" alt="LEO"><span class="dept-tag">Law Enforcement</span>
+      <div class="dept-body"><div class="dept-name">Montana State Police</div><div class="dept-desc">Patrol highways, respond to emergencies, and enforce the law across the state.</div><a href="departments.html" class="dept-link">Learn More →</a></div>
+    </div>
+    <div class="reveal dept">
+      <img src="montana-fire.png" class="dept-img" alt="Fire"><span class="dept-tag">Fire & EMS</span>
+      <div class="dept-body"><div class="dept-name">Great Falls Fire Rescue</div><div class="dept-desc">Fight fires, respond to medical emergencies, and save lives across Montana.</div><a href="departments.html" class="dept-link">Learn More →</a></div>
+    </div>
+    <div class="reveal dept">
+      <img src="montana-civ.png" class="dept-img" alt="Civilian"><span class="dept-tag">Civilian</span>
+      <div class="dept-body"><div class="dept-name">Civilian Life</div><div class="dept-desc">Cruise the open roads, attend events, and live your best life in Montana.</div><a href="departments.html" class="dept-link">Learn More →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="section" style="padding-top:40px;">
+  <div class="reveal"><span class="s-label">Why Montana</span><h2 class="s-title">What Sets Us Apart</h2></div>
+  <div class="feat-grid">
+    <div class="reveal feat"><div class="feat-icon"><div class="feat-dot"></div></div><h3>Serious RP</h3><p>Strict standards with realistic, immersive scenarios. No random chaos.</p></div>
+    <div class="reveal feat"><div class="feat-icon"><div class="feat-dot"></div></div><h3>Active Staff</h3><p>Dedicated team online around the clock with fast response times.</p></div>
+    <div class="reveal feat"><div class="feat-icon"><div class="feat-dot"></div></div><h3>Daily Sessions</h3><p>Scheduled sessions every day with live tracking and community votes.</p></div>
+    <div class="reveal feat"><div class="feat-icon"><div class="feat-dot"></div></div><h3>Custom Fleet</h3><p>Custom vehicles for every department — LEO, Fire, EMS, civilian.</p></div>
+    <div class="reveal feat"><div class="feat-icon"><div class="feat-dot"></div></div><h3>Rank Up</h3><p>Work your way through the ranks with promotions earned through effort.</p></div>
+    <div class="reveal feat"><div class="feat-icon"><div class="feat-dot"></div></div><h3>Community</h3><p>A welcoming server that treats members like family. Your voice matters.</p></div>
+  </div>
+</section>
+
+<!-- Auto-scrolling Gallery -->
+<section class="section" style="padding-bottom:40px;">
+  <div class="reveal"><span class="s-label">Gallery</span><h2 class="s-title">Life in Montana</h2></div>
+</section>
+<div class="gallery-strip">
+  <div class="gallery-scroll">
+    <div class="gallery-item"><img src="montana-leo.png" alt=""><span>LEO</span></div>
+    <div class="gallery-item"><img src="montana-fire.png" alt=""><span>Fire</span></div>
+    <div class="gallery-item"><img src="montana-civ.png" alt=""><span>Civilian</span></div>
+    <div class="gallery-item"><img src="montana-civ2.png" alt=""><span>Cruising</span></div>
+    <div class="gallery-item"><img src="montana-banner.png" alt=""><span>Montana</span></div>
+    <!-- Duplicate for seamless loop -->
+    <div class="gallery-item"><img src="montana-leo.png" alt=""><span>LEO</span></div>
+    <div class="gallery-item"><img src="montana-fire.png" alt=""><span>Fire</span></div>
+    <div class="gallery-item"><img src="montana-civ.png" alt=""><span>Civilian</span></div>
+    <div class="gallery-item"><img src="montana-civ2.png" alt=""><span>Cruising</span></div>
+    <div class="gallery-item"><img src="montana-banner.png" alt=""><span>Montana</span></div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="reveal cta-box">
+    <div class="cta-orb"></div>
+    <h2>Ready to Join Montana?</h2>
+    <p>Applications are open. Start your journey in the wild beauty of Montana today.</p>
+    <a href="https://discord.gg/your-invite" target="_blank" class="btn-p" style="position:relative;">Join Discord ↗</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-l"><img src="montana-logo.png" alt=""><span class="footer-copy">© 2025 Montana State Roleplay</span></div>
+  <div class="footer-r">
+    <a href="https://discord.gg/your-invite" target="_blank">Discord</a>
+    <a href="departments.html">Departments</a>
+    <a href="shop.html">Shop</a>
+    <a href="join.html">Join</a>
+  </div>
+</footer>
+
+<script>
+/* ── Loader ─────────────────────────────── */
+document.body.style.overflow='hidden';
+setTimeout(()=>{document.getElementById('loader').classList.add('done');document.body.style.overflow='';},2800);
+
+/* ── Bear Cursor ────────────────────────── */
+const bear=document.getElementById('bear'),glow=document.getElementById('cursor-glow');
+let bx=-100,by=-100,mx=-100,my=-100,facing=1;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+!function tick(){
+  const dx=mx-bx,dy=my-by;
+  bx+=dx*0.12;by+=dy*0.12;
+  // Flip bear based on horizontal movement
+  if(dx>2)facing=1;else if(dx<-2)facing=-1;
+  const running=Math.abs(dx)>3||Math.abs(dy)>3;
+  bear.style.left=bx+'px';bear.style.top=by+'px';
+  bear.style.transform=`translate(-50%,-50%) scaleX(${facing}) ${running?'rotate('+(dx*0.3)+'deg)':''}`;
+  glow.style.left=bx+'px';glow.style.top=by+'px';
+  requestAnimationFrame(tick);
+}();
+
+/* ── Parallax Trees ─────────────────────── */
+const tl1=document.getElementById('tl1'),tl2=document.getElementById('tl2'),tl3=document.getElementById('tl3');
+window.addEventListener('scroll',()=>{
+  const s=window.scrollY;const h=window.innerHeight;
+  // Trees move inward/up at different speeds as you scroll
+  const p=Math.min(s/h,1);
+  tl1.style.transform=`translateY(${-s*0.05}px) scaleY(${1+p*0.3})`;
+  tl2.style.transform=`translateY(${-s*0.12}px) scaleX(${1+p*0.15})`;
+  tl3.style.transform=`translateY(${-s*0.2}px) scaleX(${1+p*0.25})`;
+  // Fade hero content
+  const hero=document.querySelector('.hero-content');
+  if(hero)hero.style.opacity=Math.max(1-s/(h*0.5),0);
+});
+
+/* ── Nav scroll ─────────────────────────── */
+window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);});
+
+/* ── Fireflies ──────────────────────────── */
+const ff=document.getElementById('fireflies');
+for(let i=0;i<20;i++){
+  const d=document.createElement('div');d.className='firefly';
+  d.style.left=Math.random()*100+'%';d.style.top=(20+Math.random()*60)+'%';
+  d.style.setProperty('--dur',(4+Math.random()*6)+'s');
+  d.style.setProperty('--dx',(Math.random()*80-40)+'px');
+  d.style.setProperty('--dy',(Math.random()*60-30)+'px');
+  d.style.animationDelay=(Math.random()*5)+'s';
+  d.style.width=(2+Math.random()*3)+'px';d.style.height=d.style.width;
+  ff.appendChild(d);
+}
+
+/* ── Reveal ─────────────────────────────── */
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

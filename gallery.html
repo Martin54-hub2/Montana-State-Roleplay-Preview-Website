@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery — Montana State Roleplay</title>
+<link rel="icon" type="image/png" href="montana-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#020E06;--surface:#061A0E;--card:#082014;--border:rgba(16,185,129,0.06);--border-h:rgba(16,185,129,0.2);--green:#2EE8A0;--green-lt:#5EFFC0;--green-dim:rgba(46,232,160,0.08);--green-glow:rgba(46,232,160,0.2);--emerald:#007040;--white:#f0fdf4;--gray:#4D7A5A;--gray-lt:#7DAA8B;--gray-dk:#0F2A18;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;line-height:1.6;}a{text-decoration:none;color:inherit;}img{max-width:100%;display:block;}::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--gray-dk);border-radius:4px;}::selection{background:var(--green-dim);color:var(--green);}
+.nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(4,13,7,0.95);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}.nav-inner{max-width:1240px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:76px;}.nav-logo{display:flex;align-items:center;gap:14px;}.nav-logo img{width:42px;height:42px;border-radius:12px;filter:drop-shadow(0 0 10px var(--green-glow));}.nav-logo-text{font-size:19px;font-weight:700;}.nav-logo-text b{color:var(--green);}.nav-links{display:flex;gap:4px;align-items:center;}.nav-link{color:var(--gray-lt);padding:9px 18px;border-radius:8px;font-size:13.5px;font-weight:500;transition:all 0.25s;}.nav-link:hover,.nav-link.active{color:var(--green);background:var(--green-dim);}.nav-cta{padding:10px 24px;border-radius:10px;margin-left:12px;background:var(--green);color:#000;font-weight:700;font-size:13.5px;box-shadow:0 0 20px var(--green-glow);}
+.page-hero{padding:140px 24px 60px;text-align:center;}.page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,56px);font-weight:900;margin-bottom:16px;}.page-hero h1 .gr{background:linear-gradient(135deg,var(--green-lt),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}.page-hero p{font-size:17px;color:var(--gray-lt);max-width:500px;margin:0 auto;}.back{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--gray-lt);margin-bottom:40px;transition:color 0.2s;}.back:hover{color:var(--green);}
+.gallery{max-width:1200px;margin:0 auto;padding:40px 24px 120px;columns:2;column-gap:16px;}
+.g-item{break-inside:avoid;margin-bottom:16px;border-radius:14px;overflow:hidden;border:1px solid var(--border);transition:all 0.3s;position:relative;cursor:pointer;}.g-item:hover{border-color:var(--border-h);transform:translateY(-4px);box-shadow:0 16px 48px rgba(16,185,129,0.05);}.g-item img{width:100%;display:block;transition:transform 0.5s;}.g-item:hover img{transform:scale(1.04);}.g-item span{position:absolute;bottom:10px;left:10px;padding:4px 12px;border-radius:50px;background:rgba(4,13,7,0.85);backdrop-filter:blur(8px);font-size:11px;font-weight:600;color:var(--green);border:1px solid rgba(16,185,129,0.1);}
+.lb{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(12px);}.lb.open{display:flex;}.lb img{max-width:90vw;max-height:90vh;border-radius:12px;}.lb-x{position:absolute;top:24px;right:32px;font-size:28px;color:var(--gray-lt);cursor:pointer;transition:color 0.2s;}.lb-x:hover{color:var(--white);}
+.footer{padding:32px 24px;max-width:1200px;margin:0 auto;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}.footer-l{display:flex;align-items:center;gap:10px;}.footer-l img{width:28px;height:28px;border-radius:8px;}.footer-copy{font-size:12px;color:var(--gray);}.footer-r{display:flex;gap:20px;}.footer-r a{font-size:12px;color:var(--gray);transition:color 0.2s;}.footer-r a:hover{color:var(--green);}
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.7s ease,transform 0.7s ease;}.reveal.visible{opacity:1;transform:translateY(0);}
+@media(max-width:768px){.nav-links{display:none!important;}.gallery{columns:1;}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner"><a href="index.html" class="nav-logo"><img src="montana-logo.png" alt="MSRP"><div class="nav-logo-text">Montana State <b>Roleplay</b></div></a><div class="nav-links"><a href="index.html" class="nav-link">Home</a><a href="departments.html" class="nav-link">Departments</a><a href="gallery.html" class="nav-link active">Gallery</a><a href="shop.html" class="nav-link">Shop</a><a href="join.html" class="nav-link">Join Us</a><a href="https://discord.gg/your-invite" target="_blank" class="nav-cta">Discord</a></div></div></nav>
+<section class="page-hero"><a href="index.html" class="back">← Back to Home</a><h1>Screenshot <span class="gr">Gallery</span></h1><p>Snapshots from around Montana. Click to view full size.</p></section>
+<div class="gallery">
+  <div class="reveal g-item" onclick="openLb(this)"><img src="montana-leo.png" alt=""><span>Law Enforcement</span></div>
+  <div class="reveal g-item" onclick="openLb(this)"><img src="montana-banner.png" alt=""><span>Montana Banner</span></div>
+  <div class="reveal g-item" onclick="openLb(this)"><img src="montana-civ.png" alt=""><span>Civilian</span></div>
+  <div class="reveal g-item" onclick="openLb(this)"><img src="montana-fire.png" alt=""><span>Fire & Rescue</span></div>
+  <div class="reveal g-item" onclick="openLb(this)"><img src="montana-civ2.png" alt=""><span>Cruising</span></div>
+</div>
+<div class="lb" id="lb" onclick="closeLb()"><span class="lb-x">✕</span><img id="lb-img" src="" alt=""></div>
+<footer class="footer"><div class="footer-l"><img src="montana-logo.png" alt=""><span class="footer-copy">© 2025 Montana State Roleplay</span></div><div class="footer-r"><a href="https://discord.gg/your-invite" target="_blank">Discord</a><a href="departments.html">Departments</a><a href="shop.html">Shop</a><a href="join.html">Join</a></div></footer>
+<script>
+function openLb(el){document.getElementById('lb-img').src=el.querySelector('img').src;document.getElementById('lb').classList.add('open');document.body.style.overflow='hidden';}
+function closeLb(){document.getElementById('lb').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLb();});
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("visible");obs.unobserve(e.target);}});},{threshold:0.1});document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+</script>
+</body></html>
